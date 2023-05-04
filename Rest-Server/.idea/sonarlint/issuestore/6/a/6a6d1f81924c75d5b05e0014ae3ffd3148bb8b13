@@ -1,0 +1,9 @@
+
+e
+java:S1128"HRemove this unused import 'com.fasterxml.jackson.annotation.JsonIgnore'.(þ‘‹„8ë‡½çû0
+c
+java:S1128"FRemove this unused import 'org.springframework.core.annotation.Order'.(ÖŽ¨æ8‡ˆ½çû0
+[
+java:S1128">Remove this unused import 'javax.validation.constraints.Size'.(›«´Ý8Œˆ½çû0
+M
+java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ8Žˆ½çû0

@@ -1,0 +1,243 @@
+openapi: 3.0.3
+info:
+  title: Bank Acount APIs - OpenAPI 3.0
+  description:  Bank Acount APIs
+  version: 1.0.1
+servers:
+  - url: http://res-server/api/
+tags:
+  - name: bank-account
+    description: tag apis
+
+paths:
+  /bank-account:
+    post:
+      tags:
+        - bank-account
+      summary: create bank account
+      description: create bank account
+      operationId: createBankAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankAccountRequest'
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            accountId:
+              schema:
+                type: integer
+                format: int64
+              description: created accountid.
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorApiResponse'
+  /bank-account/{accountId}:
+    get:
+      tags:
+        - bank-account
+      summary: get bank account by id
+      description: get bank account
+      operationId: getBankAccount
+      parameters:
+        - name: accountId
+          in: path
+          description: ID of session to get
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccountResponse'
+        '404':
+          description: Not Found
+  /bank-account/transfer:
+    post:
+      tags:
+        - bank-account
+      summary: transfer amount
+      description: transfer money from bank account to another
+      operationId: transferMoney
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferModel'
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorApiResponse'
+  /bank-account/{accountId}/transactions:
+    get:
+      tags:
+        - bank-account
+      summary: transactions for a given account.
+      description: Retrieve transfer history for a given account.
+      operationId: getBankAccountTransaction
+      parameters:
+        - name: accountId
+          in: path
+          description: ID of session to get
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionsResponse'
+        '404':
+          description: Not Found
+
+components:
+  schemas:
+    TransferModel:
+      required:
+        - fromAccount
+        - toAccount
+        - amount
+        - transactionType
+      properties:
+        fromAccount:
+          type: integer
+          format: int64
+          example: "0073453111"
+        toAccount:
+          type: integer
+          format: int64
+          example: "0073453434"
+        amount:
+          type: integer
+          format: int64
+          example: 500
+        transactionType:
+          type: string
+          example: "DEPOSITS"
+    TransactionsResponse:
+      required:
+        - id
+        - fromAccount
+        - toAccount
+        - amountBefore
+        - amountAfter
+        - transactionType
+        - createdAt
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123412341236764512
+        createdAt:
+          type: string
+          format: date
+          example: "2019-08-31T22:49:05.630+07:00"
+        fromAccount:
+          type: integer
+          format: int64
+          example: "0073453111"
+        toAccount:
+          type: integer
+          format: int64
+          example: "0073453434"
+        amountBefore:
+          type: integer
+          format: int64
+          example: 500
+        amountAfter:
+          type: integer
+          format: int64
+          example: 1500
+        transactionType:
+          type: string
+          example: "DEPOSITS"
+    BankAccountRequest:
+      required:
+        - balance
+        - accountStatus
+        - accountType
+        - currency
+        - customerId
+      properties:
+        balance:
+          type: integer
+          format: int64
+          example: 1000
+        accountStatus:
+          type: string
+          example: "ACTIVE"
+        accountType:
+          type: string
+          example: "SAVING"
+        currency:
+          type: string
+          example: "EGP"
+        customerId:
+          type: integer
+          format: int64
+          example: 1234124
+    BankAccountResponse:
+      required:
+        - id
+        - balance
+        - accountStatus
+        - accountType
+        - currency
+        - customerId
+        - createdAt
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 413242214
+        balance:
+          type: integer
+          format: int64
+          example: 1000
+        accountStatus:
+          type: string
+          example: "ACTIVE"
+        accountType:
+          type: string
+          example: "SAVING"
+        currency:
+          type: string
+          example: "EGP"
+        customerId:
+          type: integer
+          format: int64
+        createdAt:
+          type: string
+          format: date
+          example: "2019-08-31T22:49:05.630+07:00"
+    ErrorApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 215
+        message:
+          type: string
+          example: "Failed to convert value of type [String]  to required type [Long];"
